@@ -1,15 +1,23 @@
+/* // tek exportsa
+module.exports = function topla(a, b) {
+  return a + b;
+};
+
+// çoklu exportsa
+module.exports.topla = function topla(a, b) {
+  return a + b;
+};
+
+module.exports.cikar = function cikar(a, b) {
+  return a - b;
+}; */
+
 function topla(a, b) {
   return a + b;
 }
 
-console.log(__filename);
-console.log(__dirname);
+function cikar(a, b) {
+  return a - b;
+}
 
-
-
-module.exports = topla;
-
-
-/* (function(exports, require, module, __filename, __dirname) {
-    // Modül kodu burada yer alır
-}); */
+module.exports = { topla, cikar };

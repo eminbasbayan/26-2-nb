@@ -2,14 +2,21 @@ const EventEmitter = require('node:events');
 
 const eventEmitter = new EventEmitter();
 
-// Özel bir event dinleyicisi on()
-eventEmitter.on('hello', () => {
-  console.log('Hello World!');
+eventEmitter.on('orderPizza', (detaylar) => {
+  const { adet, boyut, icindekiler } = detaylar;
+  console.log(
+    `${adet} adet ${boyut} boyutunda pizza siparişi verildi. İçindekiler: ${icindekiler}`,
+  );
 });
 
-eventEmitter.on('hello', () => {
-  console.log('Hello World! 2');
+eventEmitter.on('orderPizza', ({ boyut }) => {
+  if (boyut === 'XL') {
+    console.log('İçecek ücretsiz!');
+  }
 });
 
-// "hello" eventini tetikle emit()
-eventEmitter.emit('hello');
+eventEmitter.emit('orderPizza', {
+  boyut: 'XL',
+  icindekiler: 'mantar, sosis, mısır, sucuk, kaşar',
+  adet: 5,
+});

@@ -3,12 +3,16 @@ const fs = require('node:fs');
 
 const server = http.createServer((request, response) => {
   const egitmen = {
-    firstName: 'Emin',
-    lastName: 'Başbayan',
+    firstName: 'Emre',
+    lastName: 'Demir',
   };
 
   response.writeHead(200, { 'content-type': 'text/html' });
-  const htmlFile = fs.readFileSync('./index.html', 'utf-8');
+  let htmlFile = fs.readFileSync('./index.html', 'utf-8');
+  htmlFile = htmlFile.replace(
+    '{{fullName}}',
+    `${egitmen.firstName} ${egitmen.lastName}`,
+  );
   response.end(htmlFile);
 });
 

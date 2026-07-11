@@ -1,8 +1,13 @@
 const http = require('node:http');
 
 const server = http.createServer((request, response) => {
-  response.writeHead(200, { 'content-type': 'text/plain' });
-  response.end('Hello World!');
+  const egitmen = {
+    firstName: 'Emin',
+    lastName: 'Başbayan',
+  };
+
+  response.writeHead(200, { 'content-type': 'application/json' });
+  response.end(JSON.stringify(egitmen));
 });
 
 server.listen(3000, () => {

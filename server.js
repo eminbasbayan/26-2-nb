@@ -1,4 +1,5 @@
 const http = require('node:http');
+const fs = require('node:fs');
 
 const server = http.createServer((request, response) => {
   const egitmen = {
@@ -6,8 +7,9 @@ const server = http.createServer((request, response) => {
     lastName: 'Başbayan',
   };
 
-  response.writeHead(200, { 'content-type': 'application/json' });
-  response.end(JSON.stringify(egitmen));
+  response.writeHead(200, { 'content-type': 'text/html' });
+  const htmlFile = fs.readFileSync('./index.html', 'utf-8');
+  response.end(htmlFile);
 });
 
 server.listen(3000, () => {

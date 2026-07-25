@@ -21,6 +21,25 @@ app.post('/', (req, res) => {
   res.json(users);
 });
 
+app.put('/', (req, res) => {
+  const { userId, email } = req.body;
+
+  const findUser = users.find((user) => user.id === userId);
+
+  if (findUser) {
+    users = users.map((user) => {
+      if (user.id === userId) {
+        return { ...user, email };
+      }
+
+      return user;
+    });
+    res.json({ success: true, users });
+  } else {
+    res.json({ success: false, message: 'Kullanıcı bulunamadı!' });
+  }
+});
+
 app.use((req, res) => {
   res.status(404).send('Page not found!');
 });

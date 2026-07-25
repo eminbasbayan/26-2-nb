@@ -2,13 +2,23 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-const users = [
+let users = [
   { id: 1, name: 'Ahmet', age: 25, email: 'ahmet@example.com' },
   { id: 2, name: 'Ayşe', age: 30, email: 'ayse@example.com' },
 ];
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.status(200).json(users);
+});
+
+app.post('/', (req, res) => {
+  const newUser = { id: Math.random(), ...req.body };
+
+  users = [...users, newUser];
+
+  res.json(users);
 });
 
 app.use((req, res) => {

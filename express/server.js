@@ -42,7 +42,7 @@ app.post('/', (req, res) => {
  */
 
 app.put('/:userId', (req, res) => {
-  const userId  = Number(req.params.userId);
+  const userId = Number(req.params.userId);
   const { email } = req.body;
 
   console.log(email);
@@ -61,6 +61,12 @@ app.put('/:userId', (req, res) => {
   } else {
     res.json({ success: false, message: 'Kullanıcı bulunamadı!' });
   }
+});
+
+app.delete('/:userId', (req, res) => {
+  const { userId } = req.params;
+  users = users.filter((user) => user.id !== Number(userId));
+  res.status(204).json(users);
 });
 
 app.use((req, res) => {

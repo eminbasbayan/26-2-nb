@@ -7,11 +7,21 @@ const customers = [
     id: 1,
     firstName: 'Emin',
     lastName: 'Başbayan',
+    role: 'user',
   },
 ];
 
+const user = {
+  id: 1,
+  firstName: 'Emin',
+  lastName: 'Başbayan',
+  role: 'user',
+};
+
 function isLogin(req, res, next) {
-  if (req.isAuth) {
+  if (user) {
+    req.role = user.role;
+    req.adi = "Emin"
     next();
   } else {
     res.status(401).send('Lütfen giriş yapın!');

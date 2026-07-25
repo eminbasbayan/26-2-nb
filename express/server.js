@@ -10,6 +10,22 @@ const customers = [
   },
 ];
 
+function isLogin(req, res, next) {
+  if (req.isAuth) {
+    next();
+  } else {
+    res.status(401).send('Lütfen giriş yapın!');
+  }
+}
+
+function isAdmin(req, res, next) {
+  if (req.role === 'admin') {
+    next();
+  } else {
+    res.status(401).send('Kullanıcı yetkisi yok!');
+  }
+}
+
 app.get('/', (req, res) => {
   /*   res.send("Hello World!") */
   res.status(200).sendFile(path.join(__dirname, 'views', 'index.html'));
@@ -17,6 +33,14 @@ app.get('/', (req, res) => {
 
 app.get('/products-page', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, 'views', 'products.html'));
+});
+
+app.get('/admin-dashboard', isLogin, isAdmin, (req, res) => {
+  res.status(200).sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+});
+
+app.get('/admin-customers', isAdmin, (req, res) => {
+  res.status(200).sendFile(path.join(__dirname, 'views', 'customers.html'));
 });
 
 function sendCustomers(req, res) {

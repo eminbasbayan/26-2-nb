@@ -1,23 +1,32 @@
 const express = require('express');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const app = express();
 
-let users = [
-  { id: 1, name: 'Ahmet', age: 25, email: 'ahmet@example.com' },
-  { id: 2, name: 'Ayşe', age: 30, email: 'ayse@example.com' },
-];
+const filePath = 'data.json';
+
+const readData = () => {
+  const jsonData = fs.readFileSync(filePath);
+  return JSON.parse(jsonData);
+};
+
+const writeData = (users) => {
+  fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
+};
 
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.status(200).json(users);
+  const data = readData();
+  res.status(200).json(data);
 });
 
 app.post('/', (req, res) => {
   const newUser = { id: Math.random(), ...req.body };
-
+  let users = readData();
   users = [...users, newUser];
 
+  writeData(users);
   res.json(users);
 });
 
@@ -45,7 +54,7 @@ app.put('/:userId', (req, res) => {
   const userId = Number(req.params.userId);
   const { email } = req.body;
 
-  console.log(email);
+  let users = readData();
 
   const findUser = users.find((user) => user.id === userId);
 
@@ -57,6 +66,7 @@ app.put('/:userId', (req, res) => {
 
       return user;
     });
+    writeData(users);
     res.json({ success: true, users });
   } else {
     res.json({ success: false, message: 'Kullanıcı bulunamadı!' });
@@ -65,7 +75,10 @@ app.put('/:userId', (req, res) => {
 
 app.delete('/:userId', (req, res) => {
   const { userId } = req.params;
+  let users = readData();
+
   users = users.filter((user) => user.id !== Number(userId));
+  writeData(users);
   res.status(204).json(users);
 });
 

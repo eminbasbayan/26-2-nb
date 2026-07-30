@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('node:fs');
 const path = require('node:path');
 const cors = require('cors');
+const { logger } = require('./middleware/logEvents');
 const app = express();
 
 const filePath = 'data.json';
@@ -39,6 +40,9 @@ const corsOptions = {
 
 // Tüm originlere izin veren basit yapılandırma
 app.use(cors(corsOptions));
+
+// Request log middleware
+app.use(logger);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

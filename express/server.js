@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('node:fs');
 const path = require('node:path');
+const cors = require('cors');
 const app = express();
 
 const filePath = 'data.json';
@@ -13,6 +14,9 @@ const readData = () => {
 const writeData = (users) => {
   fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
 };
+
+// Tüm originlere izin veren basit yapılandırma
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

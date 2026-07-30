@@ -15,6 +15,7 @@ const writeData = (users) => {
 };
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
   const data = readData();
@@ -80,6 +81,18 @@ app.delete('/:userId', (req, res) => {
   users = users.filter((user) => user.id !== Number(userId));
   writeData(users);
   res.status(204).json(users);
+});
+
+app.post('/submit', (req, res) => {
+  console.log(req.body);
+  console.log(req.body.username);
+  console.log(req.body.email);
+
+  res.send('Veriler başarıyla alındı!');
+});
+
+app.get('/form', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 app.use((req, res) => {

@@ -1,9 +1,19 @@
+const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 
-const registerUser = (req, res) => {
+const registerUser = async (req, res) => {
   try {
-    const newUser = { id: Date.now(), ...req.body };
+    const { password, ...otherData } = req.body;
+    console.log(password, otherData);
+
+    // Password hash'leme
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    console.log(hashedPassword);
+
+    const newUser = { id: Date.now(), password: hashedPassword, ...otherData };
+
     const usersFilePath = path.join(__dirname, '..', './data', 'users.json');
     const users = JSON.parse(fs.readFileSync(usersFilePath, 'utf-8'));
     // Email kontrolü
@@ -21,18 +31,24 @@ const registerUser = (req, res) => {
   }
 };
 
-const loginUser = (req, res) => {
+const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const usersFilePath = path.join(__dirname, '..', './data', 'users.json');
     const users = JSON.parse(fs.readFileSync(usersFilePath, 'utf-8'));
     // Kullanıcı doğrulama
-    const user = users.find(
-      (user) => user.email === email && user.password === password,
-    );
+    const user = users.find((user) => user.email === email);
     if (!user) {
-      return res.status(401).json({ message: 'Geçersiz email veya şifre.' });
+      return res.status(401).json({ message: 'Email veya şifre.' });
     }
+
+    // Parola kontrolü
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+      return res.status(401).json({ message: 'Geçersiz email veya şifre' });
+    }
+
     res.status(200).json({ message: 'Giriş başarılı!', user });
   } catch (error) {
     res.status(400).json({ message: error.message });

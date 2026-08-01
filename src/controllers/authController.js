@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
+const { secret, expiresIn } = require('../config/jwtConfig.js');
 
 const registerUser = async (req, res) => {
   try {
@@ -49,7 +51,11 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Geçersiz email veya şifre' });
     }
 
-    res.status(200).json({ message: 'Giriş başarılı!', user });
+    const token = jwt.sign({ id: user.id, email: user.email }, secret, {
+      expiresIn,
+    });
+
+    res.status(200).json({ message: 'Giriş başarılı!', user, token });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

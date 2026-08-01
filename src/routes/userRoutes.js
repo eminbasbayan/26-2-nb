@@ -6,9 +6,10 @@ const {
   updateUser,
   deleteUser,
 } = require('../controllers/userController.js');
+const { verifyToken } = require('../middleware/auth.js');
 
 router.get('/', getAllUsers);
-router.post('/', createUser);
+router.post('/', verifyToken, createUser);
 router.put('/', updateUser);
 router.delete('/:userId', deleteUser);
 

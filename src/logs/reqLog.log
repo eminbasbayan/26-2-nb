@@ -12,3 +12,10 @@
 01.08.2026	21:55.46	8c12d04d-20e0-4897-9de8-ecf6ef242c28	DELETE	/api/users/1785610423832	undefined
 01.08.2026	21:55.54	abf2fd7e-096d-4b68-b45b-dc935f1ffe17	DELETE	/api/users/1785610423872	undefined
 01.08.2026	21:57.02	0cef0653-ece3-471a-ae88-62f9e1c91d3b	DELETE	/api/users/1785610423872	undefined
+01.08.2026	22:17.44	35687d81-6f92-4476-a0f4-1b8e29e9c0b2	GET	/api/users	undefined
+01.08.2026	22:25.10	b59da9a9-2ccf-4cd9-98da-926293355f4f	POST	/api/users/register	undefined
+01.08.2026	22:25.27	21075ed4-ea66-4dc2-9881-dec42a9d4b09	POST	/api/users/register	undefined
+01.08.2026	22:25.29	247e9fbd-f246-48c5-aed3-03138d0487b6	POST	/api/users/register	undefined
+01.08.2026	22:27.42	9cdc1df6-9209-41e7-9b8e-b2a56e84af8b	POST	/api/users/register	undefined
+01.08.2026	22:27.53	75e8b32d-c88e-48f5-b935-90bd803c415a	POST	/api/users/login	undefined
+01.08.2026	22:27.58	cec2cf4a-71f9-4ab9-a4df-ae7e6894a188	POST	/api/users/login	undefined

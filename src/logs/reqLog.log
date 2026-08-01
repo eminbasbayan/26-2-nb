@@ -2,3 +2,13 @@
 30.07.2026	22:17.09	95cd777b-cf13-4b60-ae92-7128da2f5711	GET	/	undefined
 30.07.2026	22:17.09	84bc2027-15b4-4eed-9b25-f711db19493f	GET	/.well-known/appspecific/com.chrome.devtools.json	undefined
 30.07.2026	22:17.28	d1c33bbb-0b8e-4a48-92c4-209bc00579c9	GET	/	https://www.google.com
+01.08.2026	21:51.15	4a0c8a75-e531-46ae-b5a9-37759754564f	GET	/api/users	undefined
+01.08.2026	21:51.48	42abf3bd-78b3-4441-8b73-52dd1c1224dc	GET	/api/users	undefined
+01.08.2026	21:52.40	c528293b-9bc7-4001-86b4-2f6581ef6b20	GET	/api/users	undefined
+01.08.2026	21:52.56	9034f058-00f8-408e-b955-decaaf9043c8	POST	/api/users	undefined
+01.08.2026	21:53.43	9a8a8464-9dd6-4c27-9728-3f559559baa3	POST	/api/users	undefined
+01.08.2026	21:54.41	94c485b4-6f2b-442f-ac92-0538c1962358	PUT	/api/users	undefined
+01.08.2026	21:54.53	8a3ad163-5415-478d-889d-72d76febe76a	PUT	/api/users	undefined
+01.08.2026	21:55.46	8c12d04d-20e0-4897-9de8-ecf6ef242c28	DELETE	/api/users/1785610423832	undefined
+01.08.2026	21:55.54	abf2fd7e-096d-4b68-b45b-dc935f1ffe17	DELETE	/api/users/1785610423872	undefined
+01.08.2026	21:57.02	0cef0653-ece3-471a-ae88-62f9e1c91d3b	DELETE	/api/users/1785610423872	undefined

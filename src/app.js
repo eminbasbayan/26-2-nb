@@ -14,8 +14,8 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(logger);
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: false, limit: '10kb' }));
 
 // Routes
 app.use('/api/auth', authRoutes);

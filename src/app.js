@@ -6,6 +6,7 @@ const corsOptions = require('./config/corsConfig');
 const userRoutes = require('./routes/userRoutes.js');
 const authRoutes = require('./routes/authRoutes.js');
 const productRoutes = require('./routes/productRoutes.js');
+const categoryRoutes = require('./routes/categoryRoutes.js');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
 
 app.use((req, res) => {
   res.status(404).send('Page not found!');

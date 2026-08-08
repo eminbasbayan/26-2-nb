@@ -3,6 +3,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const { logger } = require('./middleware/logEvents');
 const errorHandler = require('./middleware/errorHandler');
+const { globalLimiter, authLimiter } = require('./middleware/rateLimiter');
 const corsOptions = require('./config/corsConfig');
 const userRoutes = require('./routes/userRoutes.js');
 const authRoutes = require('./routes/authRoutes.js');
@@ -14,11 +15,12 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(logger);
+app.use(globalLimiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: false, limit: '10kb' }));
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);

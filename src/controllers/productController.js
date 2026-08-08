@@ -15,10 +15,6 @@ const createProduct = async (req, res) => {
   try {
     const { name, price, description, stock, category } = req.body;
 
-    if (!category) {
-      return res.status(400).json({ message: 'Category is required' });
-    }
-
     const existingCategory = await Category.findById(category);
     if (!existingCategory) {
       return res.status(404).json({ message: 'Category not found' });

@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const morgan = require('morgan');
 const { logger } = require('./middleware/logEvents');
 const errorHandler = require('./middleware/errorHandler');
 const corsOptions = require('./config/corsConfig');
@@ -11,6 +12,7 @@ const categoryRoutes = require('./routes/categoryRoutes.js');
 const app = express();
 
 app.use(cors(corsOptions));
+app.use(morgan('dev'));
 app.use(logger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

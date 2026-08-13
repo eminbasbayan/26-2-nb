@@ -6,17 +6,23 @@ const cookieConfig = require('../config/cookieConfig.js');
 
 const registerUser = async (req, res) => {
   try {
-    const { password, ...otherData } = req.body;
+    const { password, name, email, city } = req.body;
 
-    // Password hash'leme
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await User.create({ password: hashedPassword, ...otherData });
-
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, secret, {
-      expiresIn,
+    const newUser = await User.create({
+      name,
+      email,
+      city,
+      password: hashedPassword,
     });
+
+    const token = jwt.sign(
+      { id: newUser.id, email: newUser.email, role: newUser.role },
+      secret,
+      { expiresIn },
+    );
 
     res.status(201).json({ message: 'Kullanıcı başarıyla oluşturuldu!', user: newUser, token });
   } catch (error) {
@@ -38,13 +44,18 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Geçersiz email veya şifre' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, secret, {
-      expiresIn,
-    });
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role || 'user' },
+      secret,
+      { expiresIn },
+    );
 
     res.cookie('accessToken', token, cookieConfig.accessToken);
 
-    res.status(200).json({ message: 'Giriş başarılı!', user: { id: user.id, email: user.email } });
+    res.status(200).json({
+      message: 'Giriş başarılı!',
+      user: { id: user.id, email: user.email, role: user.role || 'user' },
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

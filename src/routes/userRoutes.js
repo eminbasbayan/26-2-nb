@@ -7,6 +7,7 @@ const {
   deleteUser,
 } = require('../controllers/userController.js');
 const { verifyToken } = require('../middleware/auth.js');
+const { checkRole } = require('../middleware/checkRole.js');
 const userValidator = require('../validators/userValidator.js');
 
 /**
@@ -14,7 +15,7 @@ const userValidator = require('../validators/userValidator.js');
  * /api/users:
  *   get:
  *     tags: [Users]
- *     summary: Tüm kullanıcıları listele
+ *     summary: Tüm kullanıcıları listele (admin)
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
@@ -28,16 +29,16 @@ const userValidator = require('../validators/userValidator.js');
  *               items:
  *                 $ref: '#/components/schemas/User'
  *       403:
- *         description: Token gerekli
+ *         description: Token gerekli veya yetkisiz
  */
-router.get('/', verifyToken, getAllUsers);
+router.get('/', verifyToken, checkRole('admin', 'user'), getAllUsers);
 
 /**
  * @openapi
  * /api/users:
  *   post:
  *     tags: [Users]
- *     summary: Yeni kullanıcı oluştur
+ *     summary: Yeni kullanıcı oluştur (admin)
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
@@ -53,22 +54,29 @@ router.get('/', verifyToken, getAllUsers);
  *               email: { type: string, format: email, maxLength: 255 }
  *               password: { type: string, minLength: 6, maxLength: 128 }
  *               city: { type: string, maxLength: 100 }
+ *               role: { type: string, enum: [user, admin] }
  *     responses:
  *       201:
  *         description: Kullanıcı oluşturuldu
  *       400:
  *         description: Validation hatası
  *       403:
- *         description: Token gerekli
+ *         description: Token gerekli veya yetkisiz
  */
-router.post('/', verifyToken, userValidator.createUser, createUser);
+router.post(
+  '/',
+  verifyToken,
+  checkRole('admin'),
+  userValidator.createUser,
+  createUser,
+);
 
 /**
  * @openapi
  * /api/users/{id}:
  *   put:
  *     tags: [Users]
- *     summary: Kullanıcı güncelle
+ *     summary: Kullanıcı güncelle (admin)
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
@@ -87,22 +95,29 @@ router.post('/', verifyToken, userValidator.createUser, createUser);
  *               email: { type: string, format: email, maxLength: 255 }
  *               password: { type: string, minLength: 6, maxLength: 128 }
  *               city: { type: string, maxLength: 100 }
+ *               role: { type: string, enum: [user, admin] }
  *     responses:
  *       200:
  *         description: Kullanıcı güncellendi
  *       404:
  *         description: Kullanıcı bulunamadı
  *       403:
- *         description: Token gerekli
+ *         description: Token gerekli veya yetkisiz
  */
-router.put('/:id', verifyToken, userValidator.updateUser, updateUser);
+router.put(
+  '/:id',
+  verifyToken,
+  checkRole('admin'),
+  userValidator.updateUser,
+  updateUser,
+);
 
 /**
  * @openapi
  * /api/users/{userId}:
  *   delete:
  *     tags: [Users]
- *     summary: Kullanıcı sil
+ *     summary: Kullanıcı sil (admin)
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
@@ -117,8 +132,14 @@ router.put('/:id', verifyToken, userValidator.updateUser, updateUser);
  *       404:
  *         description: Kullanıcı bulunamadı
  *       403:
- *         description: Token gerekli
+ *         description: Token gerekli veya yetkisiz
  */
-router.delete('/:userId', verifyToken, userValidator.deleteUser, deleteUser);
+router.delete(
+  '/:userId',
+  verifyToken,
+  checkRole('admin'),
+  userValidator.deleteUser,
+  deleteUser,
+);
 
 module.exports = router;

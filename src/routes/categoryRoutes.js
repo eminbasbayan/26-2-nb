@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController.js');
 const categoryValidator = require('../validators/categoryValidator.js');
+const { verifyToken } = require('../middleware/auth.js');
+const { checkRole } = require('../middleware/checkRole.js');
 
 /**
  * @openapi
@@ -26,7 +28,10 @@ router.get('/', categoryController.getAllCategories);
  * /api/categories:
  *   post:
  *     tags: [Categories]
- *     summary: Yeni kategori oluştur
+ *     summary: Yeni kategori oluştur (admin)
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -42,9 +47,13 @@ router.get('/', categoryController.getAllCategories);
  *         description: Kategori oluşturuldu
  *       400:
  *         description: Validation veya unique name hatası
+ *       403:
+ *         description: Token gerekli veya yetkisiz
  */
 router.post(
   '/',
+  verifyToken,
+  checkRole('admin'),
   categoryValidator.createCategory,
   categoryController.createCategory,
 );
@@ -54,7 +63,10 @@ router.post(
  * /api/categories/{id}:
  *   put:
  *     tags: [Categories]
- *     summary: Kategori güncelle
+ *     summary: Kategori güncelle (admin)
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -71,11 +83,15 @@ router.post(
  *     responses:
  *       200:
  *         description: Kategori güncellendi
+ *       403:
+ *         description: Token gerekli veya yetkisiz
  *       404:
  *         description: Category not found
  */
 router.put(
   '/:id',
+  verifyToken,
+  checkRole('admin'),
   categoryValidator.updateCategory,
   categoryController.updateCategory,
 );
@@ -85,7 +101,10 @@ router.put(
  * /api/categories/{categoryId}:
  *   delete:
  *     tags: [Categories]
- *     summary: Kategori sil
+ *     summary: Kategori sil (admin)
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: categoryId
@@ -94,11 +113,15 @@ router.put(
  *     responses:
  *       204:
  *         description: Kategori silindi
+ *       403:
+ *         description: Token gerekli veya yetkisiz
  *       404:
  *         description: Category not found
  */
 router.delete(
   '/:categoryId',
+  verifyToken,
+  checkRole('admin'),
   categoryValidator.deleteCategory,
   categoryController.deleteCategory,
 );

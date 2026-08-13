@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/User.js');
 
 const getAllUsers = async (req, res) => {
@@ -11,9 +12,21 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password, city } = req.body;
-    const user = await User.create({ name, email, password, city });
-    res.status(201).json(user);
+    const { name, email, password, city, role } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = await User.create({
+      name,
+      email,
+      city,
+      password: hashedPassword,
+      role: role === 'admin' ? 'admin' : 'user',
+    });
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+    res.status(201).json(userResponse);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -21,11 +34,22 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true },
-    ).select('-password');
+    const { name, email, password, city, role } = req.body;
+    const updateData = {};
+
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email;
+    if (city !== undefined) updateData.city = city;
+    if (role === 'admin' || role === 'user') updateData.role = role;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      updateData.password = await bcrypt.hash(password, salt);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+    }).select('-password');
+
     if (!updatedUser) {
       return res.status(404).json({ message: 'Kullanıcı bulunamadı' });
     }

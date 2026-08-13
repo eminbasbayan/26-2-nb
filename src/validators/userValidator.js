@@ -21,6 +21,10 @@ const createUser = [
     .trim()
     .isLength({ max: 100 })
     .withMessage('City en fazla 100 karakter olmalı'),
+  body('role')
+    .optional()
+    .isIn(['user', 'admin'])
+    .withMessage('Role user veya admin olmalı'),
   validate,
 ];
 
@@ -48,6 +52,10 @@ const updateUser = [
     .trim()
     .isLength({ max: 100 })
     .withMessage('City en fazla 100 karakter olmalı'),
+  body('role')
+    .optional()
+    .isIn(['user', 'admin'])
+    .withMessage('Role user veya admin olmalı'),
   validate,
 ];
 

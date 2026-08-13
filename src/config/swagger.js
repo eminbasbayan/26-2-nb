@@ -30,6 +30,7 @@ const options = {
             name: { type: 'string' },
             email: { type: 'string', format: 'email' },
             city: { type: 'string' },
+            role: { type: 'string', enum: ['user', 'admin'] },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time' },
           },

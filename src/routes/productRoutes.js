@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController.js');
 const productValidator = require('../validators/productValidator.js');
+const { verifyToken } = require('../middleware/auth.js');
+const { checkRole } = require('../middleware/checkRole.js');
 
 /**
  * @openapi
@@ -26,7 +28,10 @@ router.get('/', productController.getAllProducts);
  * /api/products:
  *   post:
  *     tags: [Products]
- *     summary: Yeni ürün oluştur
+ *     summary: Yeni ürün oluştur (admin)
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -45,17 +50,28 @@ router.get('/', productController.getAllProducts);
  *         description: Ürün oluşturuldu
  *       400:
  *         description: Validation hatası
+ *       403:
+ *         description: Token gerekli veya yetkisiz
  *       404:
  *         description: Category not found
  */
-router.post('/', productValidator.createProduct, productController.createProduct);
+router.post(
+  '/',
+  verifyToken,
+  checkRole('admin'),
+  productValidator.createProduct,
+  productController.createProduct,
+);
 
 /**
  * @openapi
  * /api/products/{id}:
  *   put:
  *     tags: [Products]
- *     summary: Ürün güncelle
+ *     summary: Ürün güncelle (admin)
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -75,17 +91,28 @@ router.post('/', productValidator.createProduct, productController.createProduct
  *     responses:
  *       200:
  *         description: Ürün güncellendi
+ *       403:
+ *         description: Token gerekli veya yetkisiz
  *       404:
  *         description: Product veya Category bulunamadı
  */
-router.put('/:id', productValidator.updateProduct, productController.updateProduct);
+router.put(
+  '/:id',
+  verifyToken,
+  checkRole('admin'),
+  productValidator.updateProduct,
+  productController.updateProduct,
+);
 
 /**
  * @openapi
  * /api/products/{productId}:
  *   delete:
  *     tags: [Products]
- *     summary: Ürün sil
+ *     summary: Ürün sil (admin)
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: productId
@@ -94,11 +121,15 @@ router.put('/:id', productValidator.updateProduct, productController.updateProdu
  *     responses:
  *       204:
  *         description: Ürün silindi
+ *       403:
+ *         description: Token gerekli veya yetkisiz
  *       404:
  *         description: Product not found
  */
 router.delete(
   '/:productId',
+  verifyToken,
+  checkRole('admin'),
   productValidator.deleteProduct,
   productController.deleteProduct,
 );

@@ -22,6 +22,57 @@ const options = {
           name: 'accessToken',
         },
       },
+      schemas: {
+        User: {
+          type: 'object',
+          properties: {
+            _id: { type: 'string' },
+            name: { type: 'string' },
+            email: { type: 'string', format: 'email' },
+            city: { type: 'string' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
+        Category: {
+          type: 'object',
+          properties: {
+            _id: { type: 'string' },
+            name: { type: 'string' },
+            description: { type: 'string' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
+        Product: {
+          type: 'object',
+          properties: {
+            _id: { type: 'string' },
+            name: { type: 'string' },
+            price: { type: 'number' },
+            description: { type: 'string' },
+            stock: { type: 'integer' },
+            category: { $ref: '#/components/schemas/Category' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
+        ValidationError: {
+          type: 'object',
+          properties: {
+            errors: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  msg: { type: 'string' },
+                  path: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
   apis: ['./src/routes/*.js'],

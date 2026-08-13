@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { secret, expiresIn } = require('../config/jwtConfig.js');
 const User = require('../models/User.js');
+const cookieConfig = require('../config/cookieConfig.js');
 
 const registerUser = async (req, res) => {
   try {
@@ -41,13 +42,23 @@ const loginUser = async (req, res) => {
       expiresIn,
     });
 
-    res.status(200).json({ message: 'Giriş başarılı!', token });
+    res.cookie('accessToken', token, cookieConfig.accessToken);
+
+    res.status(200).json({ message: 'Giriş başarılı!', user: { id: user.id, email: user.email } });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// authController
+const logoutUser = (req, res) => {
+  res.clearCookie('accessToken', cookieConfig.accessToken);
+
+  res.status(200).json({ message: 'Çıkış yapıldı' });
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  logoutUser,
 };

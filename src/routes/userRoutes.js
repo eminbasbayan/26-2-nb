@@ -9,9 +9,9 @@ const {
 const { verifyToken } = require('../middleware/auth.js');
 const userValidator = require('../validators/userValidator.js');
 
-router.get('/', getAllUsers);
+router.get('/',  verifyToken, getAllUsers);
 router.post('/', verifyToken, userValidator.createUser, createUser);
-router.put('/:id', userValidator.updateUser, updateUser);
-router.delete('/:userId', userValidator.deleteUser, deleteUser);
+router.put('/:id', verifyToken, userValidator.updateUser, updateUser);
+router.delete('/:userId', verifyToken, userValidator.deleteUser, deleteUser);
 
 module.exports = router;

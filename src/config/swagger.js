@@ -6,7 +6,7 @@ const options = {
     info: {
       title: 'E-Commerce API',
       version: '1.0.0',
-      description: 'Auth, Users, Products, Categories',
+      description: 'Auth, Users, Products, Categories, Payments',
     },
     servers: [{ url: 'http://localhost:3000', description: 'Local' }],
     components: {
@@ -54,6 +54,20 @@ const options = {
             description: { type: 'string' },
             stock: { type: 'integer' },
             category: { $ref: '#/components/schemas/Category' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
+        Order: {
+          type: 'object',
+          properties: {
+            _id: { type: 'string' },
+            user: { type: 'string' },
+            product: { $ref: '#/components/schemas/Product' },
+            price: { type: 'number' },
+            conversationId: { type: 'string' },
+            paymentId: { type: 'string' },
+            status: { type: 'string', enum: ['pending', 'paid', 'failed'] },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time' },
           },

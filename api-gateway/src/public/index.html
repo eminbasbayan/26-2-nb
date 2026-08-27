@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="tr" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Node.js mikroservisleriyle çalışan sade e-ticaret arayüzü"
+    />
+    <title>NOVA Store · Mikroservis Mağazası</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: '#080b12',
+              panel: '#111827',
+              lime: '#c8ff45',
+            },
+            boxShadow: {
+              glow: '0 0 45px rgba(200,255,69,.14)',
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="min-h-screen bg-ink text-slate-100 antialiased selection:bg-lime selection:text-ink">
+    <div class="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_75%_15%,rgba(200,255,69,.12),transparent_35%),radial-gradient(circle_at_20%_0%,rgba(56,189,248,.10),transparent_30%)]"></div>
+
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-ink/80 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
+        <a href="#top" class="flex items-center gap-3" aria-label="NOVA Store ana sayfa">
+          <span class="grid h-10 w-10 place-items-center rounded-xl bg-lime font-black text-ink">N</span>
+          <span>
+            <span class="block text-sm font-black tracking-[0.24em]">NOVA</span>
+            <span class="block text-[10px] uppercase tracking-[0.28em] text-slate-500">micro store</span>
+          </span>
+        </a>
+
+        <nav class="hidden items-center gap-7 text-sm font-medium text-slate-400 md:flex">
+          <a class="transition hover:text-white" href="#catalog">Ürünler</a>
+          <a class="transition hover:text-white" href="#architecture">Mimari</a>
+          <a id="adminNav" class="hidden transition hover:text-white" href="#admin">Yönetim</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <span id="apiStatus" class="hidden items-center gap-2 rounded-full border border-white/10 px-3 py-2 text-xs text-slate-400 sm:flex">
+            <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+            API kontrol ediliyor
+          </span>
+          <button id="authButton" class="rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-ink transition hover:bg-lime">
+            Giriş yap
+          </button>
+          <div id="userMenu" class="hidden items-center gap-2">
+            <span id="userChip" class="hidden rounded-xl border border-white/10 px-3 py-2 text-sm text-slate-300 sm:block"></span>
+            <button id="logoutButton" class="rounded-xl border border-white/15 px-3 py-2 text-sm font-semibold transition hover:border-rose-400 hover:text-rose-300">
+              Çıkış
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="mx-auto grid min-h-[72vh] max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-[1.15fr_.85fr] lg:px-8 lg:py-28">
+        <div>
+          <div class="mb-7 inline-flex items-center gap-2 rounded-full border border-lime/20 bg-lime/5 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-lime">
+            <span class="h-1.5 w-1.5 rounded-full bg-lime"></span>
+            4 servis · tek deneyim
+          </div>
+          <h1 class="max-w-4xl text-5xl font-black leading-[.98] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+            Alışverişin sade,
+            <span class="text-lime">altyapının güçlü</span>
+            hali.
+          </h1>
+          <p class="mt-7 max-w-2xl text-lg leading-8 text-slate-400">
+            Kullanıcı, katalog ve sipariş servisleri tek bir API Gateway arkasında çalışır. Ürünleri keşfet, hesabını oluştur ve güvenli ödeme akışını başlat.
+          </p>
+          <div class="mt-9 flex flex-wrap gap-3">
+            <a href="#catalog" class="rounded-xl bg-lime px-6 py-3.5 text-sm font-black text-ink transition hover:-translate-y-0.5 hover:shadow-glow">
+              Ürünleri keşfet
+            </a>
+            <button id="heroAuthButton" class="rounded-xl border border-white/15 px-6 py-3.5 text-sm font-bold transition hover:border-white/35 hover:bg-white/5">
+              Ücretsiz hesap aç
+            </button>
+          </div>
+        </div>
+
+        <div class="relative mx-auto w-full max-w-lg">
+          <div class="absolute -inset-5 rounded-[2rem] bg-gradient-to-br from-lime/15 to-sky-400/5 blur-2xl"></div>
+          <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[.045] p-6 shadow-2xl backdrop-blur">
+            <div class="mb-8 flex items-center justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[.2em] text-slate-500">Canlı sistem</p>
+                <h2 class="mt-1 text-xl font-bold">Servis görünümü</h2>
+              </div>
+              <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold text-emerald-300">Gateway :3000</span>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div><p class="font-semibold">User Service</p><p class="text-xs text-slate-500">Auth · Users · JWT</p></div>
+                <span class="font-mono text-sm text-slate-400">:3001</span>
+              </div>
+              <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div><p class="font-semibold">Catalog Service</p><p class="text-xs text-slate-500">Products · Categories · Stock</p></div>
+                <span class="font-mono text-sm text-slate-400">:3002</span>
+              </div>
+              <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div><p class="font-semibold">Order Service</p><p class="text-xs text-slate-500">Checkout · Payment · Orders</p></div>
+                <span class="font-mono text-sm text-slate-400">:3003</span>
+              </div>
+            </div>
+            <div class="mt-6 grid grid-cols-3 gap-3 border-t border-white/10 pt-6 text-center">
+              <div><strong id="productCount" class="block text-2xl">0</strong><span class="text-xs text-slate-500">ürün</span></div>
+              <div><strong id="categoryCount" class="block text-2xl">0</strong><span class="text-xs text-slate-500">kategori</span></div>
+              <div><strong class="block text-2xl text-lime">1</strong><span class="text-xs text-slate-500">gateway</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="catalog" class="mx-auto max-w-7xl scroll-mt-24 px-5 py-20 lg:px-8">
+        <div class="mb-9 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[.24em] text-lime">Katalog</p>
+            <h2 class="mt-3 text-4xl font-black tracking-tight">Bugünün seçkisi</h2>
+            <p class="mt-3 text-slate-400">Katalog servisinden gerçek zamanlı ürün ve stok bilgisi.</p>
+          </div>
+          <div class="grid gap-3 sm:grid-cols-[minmax(220px,1fr)_200px_auto]">
+            <label class="relative block">
+              <span class="sr-only">Ürün ara</span>
+              <input id="searchInput" type="search" placeholder="Ürün ara…" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none transition placeholder:text-slate-600 focus:border-lime/50" />
+            </label>
+            <label>
+              <span class="sr-only">Kategori seç</span>
+              <select id="categoryFilter" class="w-full rounded-xl border border-white/10 bg-panel px-4 py-3 text-sm outline-none focus:border-lime/50">
+                <option value="">Tüm kategoriler</option>
+              </select>
+            </label>
+            <button id="refreshCatalog" class="rounded-xl border border-white/10 px-4 py-3 text-sm font-bold transition hover:bg-white/5" aria-label="Kataloğu yenile">Yenile</button>
+          </div>
+        </div>
+
+        <div id="catalogLoading" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="h-80 animate-pulse rounded-3xl bg-white/5"></div>
+          <div class="h-80 animate-pulse rounded-3xl bg-white/5"></div>
+          <div class="h-80 animate-pulse rounded-3xl bg-white/5"></div>
+        </div>
+        <div id="productGrid" class="hidden grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
+        <div id="emptyCatalog" class="hidden rounded-3xl border border-dashed border-white/15 px-6 py-16 text-center">
+          <div class="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-2xl">✦</div>
+          <h3 class="text-xl font-bold">Henüz ürün yok</h3>
+          <p class="mt-2 text-sm text-slate-500">Admin hesabıyla giriş yaparak ilk ürünü ekleyebilirsin.</p>
+        </div>
+      </section>
+
+      <section id="architecture" class="border-y border-white/10 bg-white/[.025]">
+        <div class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+          <div class="mb-10 max-w-2xl">
+            <p class="text-xs font-bold uppercase tracking-[.24em] text-sky-300">Nasıl çalışır?</p>
+            <h2 class="mt-3 text-4xl font-black tracking-tight">Tek kapı, net sınırlar.</h2>
+          </div>
+          <div class="grid gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 md:grid-cols-3">
+            <article class="bg-ink p-7"><span class="text-sm font-black text-lime">01</span><h3 class="mt-5 text-xl font-bold">Kimliğini doğrula</h3><p class="mt-3 text-sm leading-6 text-slate-500">User Service hesabını yönetir ve diğer servislerin doğruladığı JWT’yi üretir.</p></article>
+            <article class="bg-ink p-7"><span class="text-sm font-black text-lime">02</span><h3 class="mt-5 text-xl font-bold">Ürünü seç</h3><p class="mt-3 text-sm leading-6 text-slate-500">Catalog Service fiyat, kategori ve stok için tek veri sahibidir.</p></article>
+            <article class="bg-ink p-7"><span class="text-sm font-black text-lime">03</span><h3 class="mt-5 text-xl font-bold">Ödemeyi başlat</h3><p class="mt-3 text-sm leading-6 text-slate-500">Order Service ürün snapshot’ını saklar ve Iyzico checkout akışını yönetir.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin" class="mx-auto hidden max-w-7xl scroll-mt-24 px-5 py-20 lg:px-8">
+        <div class="mb-9">
+          <p class="text-xs font-bold uppercase tracking-[.24em] text-amber-300">Yönetim alanı</p>
+          <h2 class="mt-3 text-4xl font-black tracking-tight">Katalog yönetimi</h2>
+        </div>
+        <div class="grid gap-6 lg:grid-cols-2">
+          <form id="categoryForm" class="rounded-3xl border border-white/10 bg-white/[.035] p-6">
+            <h3 class="text-xl font-bold">Yeni kategori</h3>
+            <div class="mt-5 space-y-4">
+              <input name="name" required minlength="2" maxlength="50" placeholder="Kategori adı" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" />
+              <textarea name="description" maxlength="500" rows="3" placeholder="Kısa açıklama" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50"></textarea>
+              <button class="w-full rounded-xl bg-white px-5 py-3 font-black text-ink transition hover:bg-lime" type="submit">Kategori ekle</button>
+            </div>
+            <div id="adminCategoryList" class="mt-6 space-y-2"></div>
+          </form>
+
+          <form id="productForm" class="rounded-3xl border border-white/10 bg-white/[.035] p-6">
+            <h3 class="text-xl font-bold">Yeni ürün</h3>
+            <div class="mt-5 grid gap-4 sm:grid-cols-2">
+              <input name="name" required minlength="2" maxlength="100" placeholder="Ürün adı" class="rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50 sm:col-span-2" />
+              <input name="price" required type="number" min="0.01" step="0.01" placeholder="Fiyat" class="rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" />
+              <input name="stock" type="number" min="0" value="0" placeholder="Stok" class="rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" />
+              <select id="productCategory" name="category" required class="rounded-xl border border-white/10 bg-panel px-4 py-3 outline-none focus:border-lime/50 sm:col-span-2"><option value="">Kategori seç</option></select>
+              <textarea name="description" required minlength="5" maxlength="1000" rows="3" placeholder="Ürün açıklaması" class="rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50 sm:col-span-2"></textarea>
+              <button class="rounded-xl bg-white px-5 py-3 font-black text-ink transition hover:bg-lime sm:col-span-2" type="submit">Ürün ekle</button>
+            </div>
+            <div id="adminProductList" class="mt-6 space-y-2"></div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-white/10">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-5 py-8 text-sm text-slate-500 sm:flex-row lg:px-8">
+        <p>© 2026 NOVA Store · Eğitim amaçlı mikroservis projesi</p>
+        <p>Express · MongoDB · Tailwind CSS · jQuery</p>
+      </div>
+    </footer>
+
+    <div id="authModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <div class="w-full max-w-md rounded-3xl border border-white/10 bg-panel p-6 shadow-2xl">
+        <div class="flex items-start justify-between">
+          <div><p class="text-xs font-bold uppercase tracking-[.2em] text-lime">NOVA hesabı</p><h2 id="authTitle" class="mt-2 text-2xl font-black">Giriş yap</h2></div>
+          <button class="modalClose rounded-lg px-3 py-2 text-slate-500 hover:bg-white/5 hover:text-white" aria-label="Pencereyi kapat">✕</button>
+        </div>
+        <div class="mt-6 grid grid-cols-2 rounded-xl bg-black/20 p-1">
+          <button id="loginTab" class="rounded-lg bg-white px-3 py-2 text-sm font-bold text-ink">Giriş</button>
+          <button id="registerTab" class="rounded-lg px-3 py-2 text-sm font-bold text-slate-400">Kayıt</button>
+        </div>
+        <form id="authForm" class="mt-5 space-y-4">
+          <div id="registerFields" class="hidden space-y-4">
+            <label class="block text-sm"><span class="mb-2 block text-slate-400">Ad soyad</span><input name="name" minlength="2" maxlength="50" placeholder="Ada Lovelace" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" /></label>
+            <label class="block text-sm"><span class="mb-2 block text-slate-400">Şehir</span><input name="city" maxlength="100" placeholder="İstanbul" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" /></label>
+          </div>
+          <label class="block text-sm"><span class="mb-2 block text-slate-400">E-posta</span><input name="email" required type="email" autocomplete="email" placeholder="ornek@email.com" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" /></label>
+          <label class="block text-sm"><span class="mb-2 block text-slate-400">Şifre</span><input name="password" required minlength="6" maxlength="128" type="password" autocomplete="current-password" placeholder="En az 6 karakter" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" /></label>
+          <button id="authSubmit" type="submit" class="w-full rounded-xl bg-lime px-5 py-3.5 font-black text-ink transition hover:bg-white">Giriş yap</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="checkoutModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-white/10 bg-panel p-6 shadow-2xl">
+        <div class="flex items-start justify-between">
+          <div><p class="text-xs font-bold uppercase tracking-[.2em] text-lime">Güvenli ödeme</p><h2 id="checkoutTitle" class="mt-2 text-2xl font-black">Checkout bilgileri</h2><p id="checkoutProduct" class="mt-1 text-sm text-slate-400"></p></div>
+          <button class="modalClose rounded-lg px-3 py-2 text-slate-500 hover:bg-white/5 hover:text-white" aria-label="Pencereyi kapat">✕</button>
+        </div>
+        <form id="checkoutForm" class="mt-6 grid gap-4 sm:grid-cols-2">
+          <input type="hidden" name="productId" />
+          <label class="block text-sm"><span class="mb-2 block text-slate-400">Soyad</span><input name="surname" required minlength="2" maxlength="50" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" /></label>
+          <label class="block text-sm"><span class="mb-2 block text-slate-400">Telefon</span><input name="gsmNumber" required minlength="10" maxlength="20" placeholder="5551234567" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" /></label>
+          <label class="block text-sm sm:col-span-2"><span class="mb-2 block text-slate-400">T.C. Kimlik No</span><input name="identityNumber" required inputmode="numeric" minlength="11" maxlength="11" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50" /></label>
+          <label class="block text-sm sm:col-span-2"><span class="mb-2 block text-slate-400">Adres</span><textarea name="address" required minlength="5" maxlength="255" rows="3" class="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 outline-none focus:border-lime/50"></textarea></label>
+          <button type="submit" class="rounded-xl bg-lime px-5 py-3.5 font-black text-ink transition hover:bg-white sm:col-span-2">Iyzico ile ödemeye geç</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="toastArea" class="fixed bottom-5 right-5 z-[60] flex w-[min(90vw,24rem)] flex-col gap-3" aria-live="polite"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

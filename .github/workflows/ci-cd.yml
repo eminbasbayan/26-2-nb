@@ -1,0 +1,87 @@
+name: CI and Coolify Deploy
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: coolify-production
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - api-gateway
+          - user-service
+          - catalog-service
+          - order-service
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.service }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.service }}
+        run: npm ci
+
+      - name: Check JavaScript syntax
+        working-directory: ${{ matrix.service }}
+        run: find src -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate production Compose
+        env:
+          APP_URL: https://example.invalid
+          JWT_SECRET: ci-only-secret-that-is-never-deployed
+          IYZICO_API_KEY: ci-only-api-key
+          IYZICO_SECRET_KEY: ci-only-secret-key
+        run: docker compose -f docker-compose.coolify.yml config --quiet
+
+      - name: Build production images
+        env:
+          APP_URL: https://example.invalid
+          JWT_SECRET: ci-only-secret-that-is-never-deployed
+          IYZICO_API_KEY: ci-only-api-key
+          IYZICO_SECRET_KEY: ci-only-secret-key
+        run: docker compose -f docker-compose.coolify.yml build
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs:
+      - validate
+      - compose
+    runs-on: ubuntu-latest
+    env:
+      COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}
+      COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+    steps:
+      - name: Trigger Coolify deployment
+        if: env.COOLIFY_WEBHOOK != '' && env.COOLIFY_TOKEN != ''
+        run: |
+          curl --fail-with-body --request GET "$COOLIFY_WEBHOOK" \
+            --header "Authorization: Bearer $COOLIFY_TOKEN"
+
+      - name: Report missing deployment secrets
+        if: env.COOLIFY_WEBHOOK == '' || env.COOLIFY_TOKEN == ''
+        run: echo 'Coolify deploy skipped until COOLIFY_WEBHOOK and COOLIFY_TOKEN are configured.'
